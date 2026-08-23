@@ -1,51 +1,49 @@
 # Skycoin Security
 
-Security and authentication component candidate for the SKYCOIN4444 ecosystem.
+Security primitives component for the SKYCOIN4444 ecosystem.
 
 ## Current repository evidence
 
 - Public TypeScript repository on `main`.
-- 27 tracked files were observed in the current audit snapshot.
-- `package.json`, Docker configuration, Docker Compose configuration, and GitHub Actions CI configuration are present.
-- No test-related filename was detected by the current audit.
+- AES-256-GCM encryption implementation is present under `src/security/encryption.ts`.
+- A Node-based encryption test is present under `tests/encryption.test.js`.
+- `package.json` provides real build, test, lint, and typecheck commands.
 
 ## Ecosystem role
 
-**Security → Authentication / Authorization / Security Controls**
+**Security → Cryptographic Primitives / Security Controls**
 
-This repository is a candidate source for security controls, authentication-related behavior, authorization, and security integration patterns. It must be compared with the canonical Identity/Auth implementation before capabilities are promoted.
+The strongest demonstrated capability in this repository is controlled local encryption using Node.js AES-256-GCM. It is a reusable primitive, not a complete authentication system.
 
 ## Truthful status
 
-- Source/configuration: **present**
-- Canonical security integration: **pending implementation comparison**
-- Automated tests: **not established by the current repository evidence**
-- Security audit: **not performed**
+- Encryption implementation: **present**
+- Basic encryption tests: **present**
+- Canonical security integration: **pending comparison and integration testing**
+- Independent security audit: **not performed**
 - Production deployment: **not verified**
 - End-to-end authentication: **not claimed**
 
-The previous README described the project as professional-grade and enterprise-ready without sufficient implementation evidence. This README intentionally separates repository presence from security assurance.
+The repository should not be described as a complete enterprise security platform solely because cryptographic primitives are present.
 
 ## Consolidation approach
 
-Preserve existing source and configuration. Compare authentication, authorization, session, secrets, audit, and security-control capabilities against the canonical Identity/Auth, infrastructure, ShadowChat, and production repositories. Consolidate verified controls into the appropriate canonical boundary instead of maintaining duplicate security services.
+Preserve the existing implementation and tests. Compare this encryption capability with established Node.js cryptography practices and the other SKYCOIN4444 security repositories. Reuse the strongest verified primitive through a narrow interface rather than creating multiple encryption services.
 
-For missing security infrastructure, prefer mature, actively maintained public open-source foundations where appropriate, but perform license, dependency, threat-model, and security review before adoption. Security code is never accepted solely because it is popular or large.
+For missing authentication, authorization, secret-management, or identity capabilities, evaluate mature public open-source foundations with strong maintenance and security records before implementing replacements. Preserve licenses and attribution and isolate external dependencies behind stable interfaces.
 
 ## Security requirements
 
-Before production promotion:
+Before production use:
 
-- establish meaningful security and authorization tests
-- perform dependency and static analysis
-- define authentication/session/token boundaries
-- enforce least privilege and secure secret handling
-- add audit logging for security-sensitive operations
-- test abuse, rate limits, and failure paths
-- perform threat modeling and independent security review
-- verify CI protections and branch controls
-- perform end-to-end authentication/authorization tests
+- run the checked-in build, typecheck, lint, and encryption tests in CI
+- document key lifecycle, storage, rotation, and destruction requirements
+- add negative tests for malformed payloads and authentication-tag failures
+- perform dependency/static analysis
+- threat-model consumers of the primitive
+- obtain independent security review for security-critical deployment
+- never hard-code or persist encryption keys in source control
 
 ## License
 
-See the checked-in repository license and applicable third-party dependency licenses.
+MIT, subject to the checked-in license and applicable third-party dependency licenses.
