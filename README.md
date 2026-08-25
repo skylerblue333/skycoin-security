@@ -1,49 +1,48 @@
-# Skycoin Security
+# Sky Crypto Envelope
 
-Security primitives component for the SKYCOIN4444 ecosystem.
+A focused TypeScript AES-256-GCM authenticated-encryption primitive from the SKYCOIN4444 engineering portfolio.
 
-## Current repository evidence
+**Status: engineering beta.** The implementation and automated checks are suitable for learning, integration testing, and controlled development use. Independent security review, production deployment, key management, authentication, authorization, and secret-vault behavior are not claimed.
 
-- Public TypeScript repository on `main`.
-- AES-256-GCM encryption implementation is present under `src/security/encryption.ts`.
-- A Node-based encryption test is present under `tests/encryption.test.js`.
-- `package.json` provides real build, test, lint, and typecheck commands.
+## What it implements
 
-## Ecosystem role
+`FileEncryption` uses Node.js `crypto` with AES-256-GCM, 32-byte keys, random 96-bit IVs, and 128-bit authentication tags. New envelopes include an explicit schema version and algorithm identifier. Decryption validates envelope structure and authentication before returning plaintext.
 
-**Security → Cryptographic Primitives / Security Controls**
+Optional associated data can bind ciphertext to an external context such as a tenant, record, or protocol identifier without encrypting that context:
 
-The strongest demonstrated capability in this repository is controlled local encryption using Node.js AES-256-GCM. It is a reusable primitive, not a complete authentication system.
+```ts
+import { FileEncryption } from "skycoin4444-security";
 
-## Truthful status
+const cryptoEnvelope = new FileEncryption();
+const key = cryptoEnvelope.generateKey();
+const encrypted = cryptoEnvelope.encrypt("example", key, "record:123");
+const plaintext = cryptoEnvelope.decrypt(encrypted, key, "record:123");
+```
 
-- Encryption implementation: **present**
-- Basic encryption tests: **present**
-- Canonical security integration: **pending comparison and integration testing**
-- Independent security audit: **not performed**
-- Production deployment: **not verified**
-- End-to-end authentication: **not claimed**
+Callers must manage key generation policy, storage, distribution, rotation, revocation, backup, and destruction. Do not store keys beside ciphertext or commit them to Git.
 
-The repository should not be described as a complete enterprise security platform solely because cryptographic primitives are present.
+## Verification
 
-## Consolidation approach
+```bash
+pnpm install
+pnpm typecheck
+pnpm test
+pnpm audit --audit-level=high
+pnpm pack
+```
 
-Preserve the existing implementation and tests. Compare this encryption capability with established Node.js cryptography practices and the other SKYCOIN4444 security repositories. Reuse the strongest verified primitive through a narrow interface rather than creating multiple encryption services.
+Tests cover successful round trips, empty plaintext, malformed envelopes, incorrect key length, ciphertext/tag tampering, invalid algorithm/version values, malformed hexadecimal fields, and associated-data mismatch.
 
-For missing authentication, authorization, secret-management, or identity capabilities, evaluate mature public open-source foundations with strong maintenance and security records before implementing replacements. Preserve licenses and attribution and isolate external dependencies behind stable interfaces.
+GitHub Actions performs typecheck, tests, dependency audit, and a package smoke test on Node.js 22. There is intentionally no runtime Docker image: this repository is a reusable library, not an HTTP service.
 
-## Security requirements
+## SKYCOIN4444 integration
 
-Before production use:
+Use the package through a narrow adapter where application-level encryption is genuinely required. Do not copy the implementation into multiple services. Identity, authorization, secrets storage, HSM/KMS integration, and service-to-service authentication belong behind separate interfaces and should not be inferred from this primitive.
 
-- run the checked-in build, typecheck, lint, and encryption tests in CI
-- document key lifecycle, storage, rotation, and destruction requirements
-- add negative tests for malformed payloads and authentication-tag failures
-- perform dependency/static analysis
-- threat-model consumers of the primitive
-- obtain independent security review for security-critical deployment
-- never hard-code or persist encryption keys in source control
+## Security limitations
+
+AES-GCM authenticity does not compensate for compromised keys, weak application authorization, plaintext leakage, unsafe host/process memory, malicious dependencies, or incorrect key lifecycle. See `SECURITY.md` before integrating the package with sensitive data.
 
 ## License
 
-MIT, subject to the checked-in license and applicable third-party dependency licenses.
+MIT, subject to the checked-in license and applicable third-party licenses.
