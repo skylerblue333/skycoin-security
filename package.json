@@ -1,19 +1,22 @@
 {
   "name": "skycoin4444-security",
-  "version": "1.1.0-beta.1",
-  "description": "Typed AES-256-GCM authenticated encryption envelope for controlled local use",
+  "version": "1.2.0-beta.1",
+  "description": "SKYCOIN4444 security primitives and deterministic local policy decisions",
   "main": "dist/security/encryption.js",
   "types": "dist/security/encryption.d.ts",
   "files": [
     "dist/security/encryption.js",
     "dist/security/encryption.d.ts",
+    "dist/policy/engine.js",
+    "dist/policy/engine.d.ts",
     "README.md",
     "SECURITY.md",
+    "docs/SKYPOLICY.md",
     "LICENSE"
   ],
   "scripts": {
     "build": "tsc",
-    "test": "pnpm run build && node tests/encryption.test.js",
+    "test": "pnpm run build && node tests/encryption.test.js && node tests/policy.test.js",
     "lint": "tsc --noEmit",
     "typecheck": "tsc --noEmit",
     "audit": "pnpm audit --audit-level=high",
@@ -23,13 +26,7 @@
     "node": ">=20"
   },
   "packageManager": "pnpm@10.15.1",
-  "keywords": [
-    "skycoin4444",
-    "security",
-    "cryptography",
-    "aes-gcm",
-    "authenticated-encryption"
-  ],
+  "keywords": ["skycoin4444", "security", "policy", "authorization", "aes-gcm"],
   "author": "SKYCOIN4444",
   "license": "MIT",
   "devDependencies": {

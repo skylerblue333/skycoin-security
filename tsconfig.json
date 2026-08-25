@@ -10,6 +10,6 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/security/**/*.ts"],
+  "include": ["src/security/**/*.ts", "src/policy/**/*.ts"],
   "exclude": ["node_modules", "dist", "tests", "src/ai-brain", "src/security/agent.ts", "src/security/ai.ts"]
 }
